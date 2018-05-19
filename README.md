@@ -8,6 +8,8 @@ Covered now:
 
 * POJO support (typed collections)
 * Client-side ObjectID generation
+* Sessions
+* Queries and data manipulation using flexible Documents
 
 TODO:
 ----
@@ -20,3 +22,4 @@ TODO:
 * Transaction support (with MongoDB 4.0)?
 * Raw BSON processing?
 * Async driver usage?
+* Kerberos
