@@ -4,6 +4,9 @@ import org.bson.types.ObjectId;
 import org.schambon.mongodb.model.Person;
 import org.schambon.mongodb.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -40,8 +43,10 @@ public class PersonService {
     }
 
     @RequestMapping(value = "/idraw/{id}", method = GET)
-    public String getPersonRaw(@PathVariable String id) {
-        return repository.findByIdRaw(id);
+    public HttpEntity<String> getPersonRaw(@PathVariable String id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new HttpEntity<>(repository.findByIdRaw(id), headers);
     }
 
     public static class PersonResponse { // old-school types might call that PersonDTO...
