@@ -4,12 +4,15 @@ import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoClient;
 import com.mongodb.ReadPreference;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.session.ClientSession;
+import com.mongodb.client.ClientSession;
 import org.bson.Document;
+import org.bson.json.JsonMode;
+import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
 import org.schambon.mongodb.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -24,11 +27,13 @@ import static com.mongodb.client.model.Updates.*;
 public class PersonRepository {
 
     private MongoCollection<Person> people;
+    private MongoCollection<Document> peopleDocumentColl;
     private MongoClient mongoClient;
 
     public PersonRepository(@Autowired MongoClient mongoClient) {
         this.mongoClient = mongoClient;
         this.people = mongoClient.getDatabase("app").getCollection("people", Person.class);
+        this.peopleDocumentColl = mongoClient.getDatabase("app").getCollection("people");
     }
 
     public Person createNew(Person person) {
@@ -109,4 +114,14 @@ public class PersonRepository {
 
     }
 
+    /**
+     * Without using domain object mappigs
+     * @param id
+     * @return
+     */
+    public String findByIdRaw(String id) {
+        Document document = peopleDocumentColl.find(eq("_id", new ObjectId(id))).first();
+        JsonWriterSettings settings = JsonWriterSettings.builder().outputMode(JsonMode.RELAXED).build();
+        return document.toJson(settings);
+    }
 }

@@ -39,6 +39,11 @@ public class PersonService {
         return new PersonResponse(repository.findById(new ObjectId(id)));
     }
 
+    @RequestMapping(value = "/idraw/{id}", method = GET)
+    public String getPersonRaw(@PathVariable String id) {
+        return repository.findByIdRaw(id);
+    }
+
     public static class PersonResponse { // old-school types might call that PersonDTO...
         String id;
         String first;
